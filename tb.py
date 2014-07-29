@@ -39,7 +39,7 @@ nowDate = date.fromtimestamp( now )
 todo = '';
 
 def makeFilename(dir, mydate):
-	return os.path.join( dir, mydate.isoformat() + '.txt')
+	return os.path.join( dir, mydate.strftime("%Y-%m-%d-%a.txt") )
 
 # ensure the year directory exists:
 currentDir = os.path.join( tbpath, nowDate.strftime("%Y") )
