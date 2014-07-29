@@ -2,7 +2,7 @@
 
 Aktuelle Version: 0.1
 
-Dieses Script (Name: tb) legt bei Aufruf ohne Parameter eine Textdatei für den aktuellen Tag an und startet einen Editor.
+Dieses Python2.7-Script (Name: tb) legt bei Aufruf ohne Parameter eine Textdatei für den aktuellen Tag an und startet einen Editor.
 Dabei schaut es nach, ob in einem der letzten vier Tagesdateien ein Todo-Marker enthalten ist. Dieser sowie alle Folgezeilen werden in die neue Tagesdatei übernommen.
 
 Bei Folgeaufrufen für den aktuellen Tag die Datei nicht neu erzeugt.
@@ -13,8 +13,11 @@ Die Übernahme von Todo-Text ist beschränkt auf die Tagesdatei von heute sowie 
 
 Der Todo-Marker ist: "%Todo:"
 
+
 ## Todos:
 
 * Sicheres Erkennen des Homedirs
 * Konfiguration (zu startender Editor) in Configdatei auslagern (~/.tagebuch)
+* gg Vorlage für Tagesdatei in Config auslagern
 * ggf Ausführen von git-Autocommit oä im Tagebuch-Ordner
+* Docs verbessern
