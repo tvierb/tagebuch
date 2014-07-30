@@ -28,7 +28,8 @@ locale.setlocale( locale.LC_TIME, 'de_DE' )
 
 # todo find homedir
 tbpath = "~/Tagebuch"
-editor = "joe"
+tbpath = os.path.expanduser( tbpath )
+editor = "vim"
 daysAdd = 0
 if len(sys.argv) > 1:
 	daysAdd = int( sys.argv[1] )
@@ -47,9 +48,9 @@ if not os.path.exists( currentDir ):
 	os.makedirs( currentDir )
 
 currentFile = makeFilename( currentDir, nowDate )
+
 if os.path.isfile( currentFile ):
 	print "Datei existiert schon: %s" % (currentFile, )
-
 else:
 	if daysAdd >= 0:  # nur wenn nicht in der Vergangenheit gespielt wird:
 		for days in (1,2,3,4):	# zurück in der zeit nach einem file suchen, und von dem den todo-block übernehmen:
@@ -64,14 +65,16 @@ else:
 					todo = data[ todoPos: ]
 				break;
 
-# Erzeuge neue Tagesdatei:
-f = open(currentFile, 'w')
-f.write( nowDate.strftime("%d.%m.%Y (%A)\n\n") )
-for i in range(7):
-	f.write( "( ) \n" )
-if len(todo):
-	f.write( "\n" + todo )
-f.close()
+	# Erzeuge neue Tagesdatei:
+	f = open(currentFile, 'w')
+	f.write( nowDate.strftime("%d.%m.%Y (%A)\n\n") )
+	for i in range(7):
+		f.write( "( ) \n" )
+	if len(todo):
+		f.write( "\n" + todo )
+	f.close()
+	print "Neue Datei: %s" % (currentFile, )
 
-print "Neue Datei: %s" % (currentFile, )
+# print "Starte Editor für Datei", currentFile
 subprocess.call( [editor, currentFile] )
+print currentFile
