@@ -13,6 +13,37 @@ Die Übernahme von Todo-Text ist beschränkt auf die Tagesdatei von heute sowie 
 
 Der Todo-Marker ist: "%Todo:"
 
+## Beispiele
+
+Der einfach Aufruf von "tb" generiert eine Datei "~/Tagebuch/2014/2014-07-30-Mi.txt" und öffnet sie im Editor:
+
+    30.07.2014 (Mittwoch)
+
+    ( )
+    ( )
+    ( )
+    ( )
+    ( )
+    ( )
+    ( )
+
+Notiert man darin (unten):
+    %Todo:
+      * Das Tagebuchtool um eine eigene Configdatei erweitern
+
+Und ruft morgen wieder "tb" auf, dann wird morgen eine Datei "~/Tagebuch/2014/2014-07-31-Do.txt" generiert:
+
+    31.07.2014 (Donnerstag)
+
+    ( )
+    ( )
+    ( )
+    ( )
+    ( )
+    ( )
+    ( )
+    %Todo:
+      * Das Tagebuchtool um eine eigene Configdatei erweitern
 
 ## Todos:
 

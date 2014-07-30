@@ -27,8 +27,8 @@ locale.setlocale( locale.LC_TIME, 'de_DE' )
 # todo: tb -n
 
 # todo find homedir
-tbpath = "Tagebuch"
-editor = "vim"
+tbpath = "~/Tagebuch"
+editor = "joe"
 daysAdd = 0
 if len(sys.argv) > 1:
 	daysAdd = int( sys.argv[1] )
