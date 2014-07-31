@@ -32,7 +32,7 @@ tbpath = os.path.expanduser( tbpath )
 editor = "vim"
 daysAdd = 0
 if len(sys.argv) > 1:
-	daysAdd = int( sys.argv[1] )
+    daysAdd = int( sys.argv[1] )
 
 now = time.time()
 now = now + (8600 * daysAdd)
@@ -40,40 +40,41 @@ nowDate = date.fromtimestamp( now )
 todo = '';
 
 def makeFilename(dir, mydate):
-	return os.path.join( dir, mydate.strftime("%Y-%m-%d-%a.txt") )
+    return os.path.join( dir, mydate.strftime("%Y-%m-%d-%a.txt") )
 
 # ensure the year directory exists:
 currentDir = os.path.join( tbpath, nowDate.strftime("%Y") )
 if not os.path.exists( currentDir ):
-	os.makedirs( currentDir )
+    os.makedirs( currentDir )
 
 currentFile = makeFilename( currentDir, nowDate )
 
 if os.path.isfile( currentFile ):
-	print "Datei existiert schon: %s" % (currentFile, )
+    print "Datei existiert schon: %s" % (currentFile, )
 else:
-	if daysAdd >= 0:  # nur wenn nicht in der Vergangenheit gespielt wird:
-		for days in (1,2,3,4):	# zurück in der zeit nach einem file suchen, und von dem den todo-block übernehmen:
-			pastDate = date.fromtimestamp(now - (86400*days))
-			pastFile = os.path.join( currentDir, pastDate.isoformat() ) + ".txt"
-			if os.path.isfile( pastFile ):
-				f = open(pastFile, 'r') 		# Lese optionalen Todo-Block aus, zum Übernehmn in die neue Datei:
-				data = f.read()
-				f.close()
-				todoPos = data.find('%Todo:')
-				if todoPos > -1:
-					todo = data[ todoPos: ]
-				break;
+    if daysAdd >= 0:  # nur wenn nicht in der Vergangenheit gespielt wird:
+        for days in (1,2,3,4):    # zurück in der zeit nach einem file suchen, und von dem den todo-block übernehmen:
+            pastDate = date.fromtimestamp(now - (86400*days))
+            pastFile = makeFilename( currentDir, pastDate )
+            # print "Checking pastFile", pastFile
+            if os.path.isfile( pastFile ):
+                f = open(pastFile, 'r')         # Lese optionalen Todo-Block aus, zum Übernehmn in die neue Datei:
+                data = f.read()
+                f.close()
+                todoPos = data.find('%Todo:')
+                if todoPos > -1:
+                    todo = data[ todoPos: ]
+                break;
 
-	# Erzeuge neue Tagesdatei:
-	f = open(currentFile, 'w')
-	f.write( nowDate.strftime("%d.%m.%Y (%A)\n\n") )
-	for i in range(7):
-		f.write( "( ) \n" )
-	if len(todo):
-		f.write( "\n" + todo )
-	f.close()
-	print "Neue Datei: %s" % (currentFile, )
+    # Erzeuge neue Tagesdatei:
+    f = open(currentFile, 'w')
+    f.write( nowDate.strftime("%d.%m.%Y (%A)\n\n") )
+    for i in range(7):
+        f.write( "( ) \n" )
+    if len(todo):
+        f.write( "\n" + todo )
+    f.close()
+    print "Neue Datei: %s" % (currentFile, )
 
 # print "Starte Editor für Datei", currentFile
 subprocess.call( [editor, currentFile] )
