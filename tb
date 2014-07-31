@@ -21,12 +21,18 @@ import time
 from datetime import date
 import sys
 import subprocess
-
+import ConfigParser
 import locale
 locale.setlocale( locale.LC_TIME, 'de_DE' )
 # todo: tb -n
 
-# todo find homedir
+configFile = os.path.expanduser( '~/.tagebuchrc' )
+if not os.path.exists( configFile ):
+    print "Generiere eine Default-Config in", configFile
+    f = open(configFile, 'w')
+    f.write("[Tagebuch]\nbasedir: ~/Tagebuch\neditor: nano\ntodomarker: %Todo:\n")
+    f.close()
+
 tbpath = "~/Tagebuch"
 tbpath = os.path.expanduser( tbpath )
 editor = "vim"
