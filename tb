@@ -14,6 +14,8 @@ Aufruf für Tage in der Vergangenheit oder Zukunft: tb +3  (Aufruf freitags für
 Oder auch mit negativen Zahlen.
 
 (C) 2014 by Tjabo Vierbücher
+
+Todo: show help on request
 """
 import os
 import os.path
@@ -33,9 +35,12 @@ if not os.path.exists( configFile ):
     f.write("[Tagebuch]\nbasedir: ~/Tagebuch\neditor: nano\ntodomarker: %Todo:\n")
     f.close()
 
-tbpath = "~/Tagebuch"
-tbpath = os.path.expanduser( tbpath )
-editor = "vim"
+config = ConfigParser.RawConfigParser()
+config.read( configFile )
+tbpath = os.path.expanduser( config.get('Tagebuch', 'basedir') )
+editor = config.get('Tagebuch', 'editor')
+todomarker = config.get('Tagebuch', 'todomarker')
+
 daysAdd = 0
 if len(sys.argv) > 1:
     daysAdd = int( sys.argv[1] )
@@ -67,7 +72,7 @@ else:
                 f = open(pastFile, 'r')         # Lese optionalen Todo-Block aus, zum Übernehmn in die neue Datei:
                 data = f.read()
                 f.close()
-                todoPos = data.find('%Todo:')
+                todoPos = data.find( todomarker )
                 if todoPos > -1:
                     todo = data[ todoPos: ]
                 break;
