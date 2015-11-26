@@ -42,11 +42,12 @@ editor = config.get('Tagebuch', 'editor')
 todomarker = config.get('Tagebuch', 'todomarker')
 
 daysAdd = 0
+
 if len(sys.argv) > 1:
     daysAdd = int( sys.argv[1] )
 
 now = time.time()
-now = now + (8600 * daysAdd)
+now = now + (86000 * daysAdd)
 nowDate = date.fromtimestamp( now )
 todo = '';
 
@@ -79,9 +80,11 @@ else:
 
     # Erzeuge neue Tagesdatei:
     f = open(currentFile, 'w')
-    f.write( nowDate.strftime("%d.%m.%Y (%A)\n\n") )
+    headline = nowDate.strftime("%d.%m.%Y (%A)")
+    f.write( headline + "\n" )
+    f.write( ("=" * len( headline )) + "\n\n" ) 
     for i in range(7):
-        f.write( "( ) \n" )
+        f.write( "> \n" )
     if len(todo):
         f.write( "\n" + todo )
     f.close()
