@@ -1,19 +1,19 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
-Dieses Programm erstellt für den aktuellen Tag -- oder einen anderen -- eine Tagesdatei für Notizen.
+Dieses Programm erstellt fuer den aktuellen Tag -- oder einen anderen -- eine Tagesdatei fuer Notizen.
 
-Bei Erstellung einer Datei für heute oder in der Zukunft wird bis zu 4 Tage zurück nach einem Todomarker
-gesucht, um mögliche Todos in die neue Datei zu übernehmen.
+Bei Erstellung einer Datei fuer heute oder in der Zukunft wird bis zu 4 Tage zurueck nach einem Todomarker
+gesucht, um moegliche Todos in die neue Datei zu uebernehmen.
 
 Der normale Aufruf ist: tb
-Dies erstellt eine Datei für heute, außer sie existiert bereits.
+Dies erstellt eine Datei fuer heute, ausser sie existiert bereits.
 
-Aufruf für Tage in der Vergangenheit oder Zukunft: tb +3  (Aufruf freitags für Montag)
+Aufruf fuer Tage in der Vergangenheit oder Zukunft: tb +3  (Aufruf freitags fuer Montag)
 Oder auch mit negativen Zahlen.
 
-(C) 2014 by Tjabo Vierbücher
+(C) 2021 by Tjabo Vierbuecher
 
 Todo: show help on request
 """
@@ -23,19 +23,19 @@ import time
 from datetime import date
 import sys
 import subprocess
-import ConfigParser
+import configparser
 import locale
 locale.setlocale( locale.LC_TIME, 'de_DE' )
 # todo: tb -n
 
 configFile = os.path.expanduser( '~/.tagebuchrc' )
 if not os.path.exists( configFile ):
-    print "Generiere eine Default-Config in", configFile
+    print("Generiere eine Default-Config in", configFile)
     f = open(configFile, 'w')
-    f.write("[Tagebuch]\nbasedir: ~/Tagebuch\neditor: nano\ntodomarker: %Todo:\n")
+    f.write("[Tagebuch]\nbasedir: ~/Tagebuch\neditor: vim\ntodomarker: # Todo\n")
     f.close()
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read( configFile )
 tbpath = os.path.expanduser( config.get('Tagebuch', 'basedir') )
 editor = config.get('Tagebuch', 'editor')
@@ -52,7 +52,7 @@ nowDate = date.fromtimestamp( now )
 todo = '';
 
 def makeFilename(dir, mydate):
-    return os.path.join( dir, mydate.strftime("%Y-%m-%d-%a.txt") )
+    return os.path.join( dir, mydate.strftime("%Y-%m-%d-%a.md") )
 
 # ensure the year directory exists:
 currentDir = os.path.join( tbpath, nowDate.strftime("%Y") )
@@ -62,15 +62,15 @@ if not os.path.exists( currentDir ):
 currentFile = makeFilename( currentDir, nowDate )
 
 if os.path.isfile( currentFile ):
-    print "Datei existiert schon: %s" % (currentFile, )
+    print("Datei existiert schon: %s" % (currentFile, ))
 else:
     if daysAdd >= 0:  # nur wenn nicht in der Vergangenheit gespielt wird:
-        for days in (1,2,3,4):    # zurück in der zeit nach einem file suchen, und von dem den todo-block übernehmen:
+        for days in (1,2,3,4):    # zurueck in der zeit nach einem file suchen, und von dem den todo-block uebernehmen:
             pastDate = date.fromtimestamp(now - (86400*days))
             pastFile = makeFilename( currentDir, pastDate )
             # print "Checking pastFile", pastFile
             if os.path.isfile( pastFile ):
-                f = open(pastFile, 'r')         # Lese optionalen Todo-Block aus, zum Übernehmn in die neue Datei:
+                f = open(pastFile, 'r')         # Lese optionalen Todo-Block aus, zum uebernehmn in die neue Datei:
                 data = f.read()
                 f.close()
                 todoPos = data.find( todomarker )
@@ -81,15 +81,17 @@ else:
     # Erzeuge neue Tagesdatei:
     f = open(currentFile, 'w')
     headline = nowDate.strftime("%d.%m.%Y (%A)")
-    f.write( headline + "\n" )
-    f.write( ("=" * len( headline )) + "\n\n" ) 
+    f.write( "# " + headline + "\n\n" )
+    # f.write( ("=" * len( headline )) + "\n\n" ) 
     for i in range(7):
-        f.write( "> \n" )
+        f.write( "* ( ) \n" )
     if len(todo):
         f.write( "\n" + todo )
+    f.write("\n# Todo\n")
     f.close()
-    print "Neue Datei: %s" % (currentFile, )
+    print("Neue Datei: %s" % (currentFile, ))
 
-# print "Starte Editor für Datei", currentFile
+# print "Starte Editor fuer Datei", currentFile
 subprocess.call( [editor, currentFile] )
-print currentFile
+print(currentFile)
+
