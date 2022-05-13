@@ -87,7 +87,7 @@ else:
         f.write( "* ( ) \n" )
     if len(todo):
         f.write( "\n" + todo )
-    f.write("\n# Todo\n")
+    # f.write("\n# Todo\n")
     f.close()
     print("Neue Datei: %s" % (currentFile, ))
 
