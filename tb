@@ -27,6 +27,7 @@ import configparser
 import locale
 locale.setlocale( locale.LC_TIME, '' )
 # todo: tb -n
+REVISION = "20230525"
 
 configFile = os.path.expanduser( '~/.tagebuchrc' )
 if not os.path.exists( configFile ):
