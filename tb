@@ -25,7 +25,7 @@ import sys
 import subprocess
 import configparser
 import locale
-locale.setlocale( locale.LC_TIME, 'de_DE' )
+locale.setlocale( locale.LC_TIME, '' )
 # todo: tb -n
 
 configFile = os.path.expanduser( '~/.tagebuchrc' )
