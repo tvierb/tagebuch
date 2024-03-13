@@ -4,8 +4,7 @@
 """
 Dieses Programm erstellt fuer den aktuellen Tag -- oder einen anderen -- eine Tagesdatei fuer Notizen.
 
-Bei Erstellung einer Datei fuer heute oder in der Zukunft wird bis zu 4 Tage zurueck nach einem Todomarker
-gesucht, um moegliche Todos in die neue Datei zu uebernehmen.
+Bei Erstellung einer Datei fuer heute oder in der Zukunft wird bis zu 4 Tage zurueck nach einem Todomarker "# Todo" gesucht, um moegliche Todos in die neue Datei zu uebernehmen.
 
 Der normale Aufruf ist: tb
 Dies erstellt eine Datei fuer heute, ausser sie existiert bereits.
@@ -40,7 +39,7 @@ config = configparser.RawConfigParser()
 config.read( configFile )
 tbpath = os.path.expanduser( config.get('Tagebuch', 'basedir') )
 editor = config.get('Tagebuch', 'editor')
-todomarker = config.get('Tagebuch', 'todomarker')
+# Der todomarker is tnun fest '# Todo'... todomarker = config.get('Tagebuch', 'todomarker')
 
 daysAdd = 0
 
@@ -65,6 +64,7 @@ currentFile = makeFilename( currentDir, nowDate )
 if os.path.isfile( currentFile ):
     print("Datei existiert schon: %s" % (currentFile, ))
 else:
+    got_todo = False
     if daysAdd >= 0:  # nur wenn nicht in der Vergangenheit gespielt wird:
         for days in (1,2,3,4):    # zurueck in der zeit nach einem file suchen, und von dem den todo-block uebernehmen:
             pastDate = date.fromtimestamp(now - (86400*days))
@@ -74,10 +74,17 @@ else:
                 f = open(pastFile, 'r')         # Lese optionalen Todo-Block aus, zum uebernehmn in die neue Datei:
                 data = f.read()
                 f.close()
-                todoPos = data.find( todomarker )
-                if todoPos > -1:
-                    todo = data[ todoPos: ]
-                break;
+                is_in_todo_block = False
+                for line in data.split("\n"):
+                    if line[0:6] == "# Todo":
+                        is_in_todo_block = True
+                        got_todo = True
+                    elif line[0:2] == "# ":
+                        is_in_todo_block = False
+                    if is_in_todo_block:
+                        todo = todo + line + "\n"
+                if got_todo:
+                    break
 
     # Erzeuge neue Tagesdatei:
     f = open(currentFile, 'w')
