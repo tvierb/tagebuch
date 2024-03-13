@@ -96,6 +96,13 @@ else:
     if len(todo):
         f.write( "\n" + todo )
     # f.write("\n# Todo\n")
+
+    f.write("\n# Redmine-Tickets\n\n")
+    p = subprocess.Popen("/home/t3o/me/tools/redmine/my-tickets.pl --prefix '* '", stdout=subprocess.PIPE, shell=True)
+    (output, err) = p.communicate()
+    p_status = p.wait()
+
+    f.write( output.decode('iso-8859-15') )
     f.close()
     print("Neue Datei: %s" % (currentFile, ))
 
