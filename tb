@@ -61,9 +61,8 @@ if not os.path.exists( currentDir ):
 
 currentFile = makeFilename( currentDir, nowDate )
 
-if os.path.isfile( currentFile ):
-    print("Datei existiert schon: %s" % (currentFile, ))
-else:
+# Create a new file if there's none:
+if not os.path.isfile( currentFile ):
     got_todo = False
     if daysAdd >= 0:  # nur wenn nicht in der Vergangenheit gespielt wird:
         for days in (1,2,3,4):    # zurueck in der zeit nach einem file suchen, und von dem den todo-block uebernehmen:
@@ -93,20 +92,25 @@ else:
     # f.write( ("=" * len( headline )) + "\n\n" ) 
     for i in range(7):
         f.write( "* ( ) \n" )
+    # Add TODO from former file:
     if len(todo):
         f.write( "\n" + todo )
-    # f.write("\n# Todo\n")
 
-    f.write("\n# Redmine-Tickets\n\n")
-    p = subprocess.Popen("/home/t3o/me/tools/redmine/my-tickets.pl --prefix '* '", stdout=subprocess.PIPE, shell=True)
-    (output, err) = p.communicate()
-    p_status = p.wait()
+    # Add output of external command:
+    if config.get('Tagebuch', 'append_command'):
+        append_title = "# Appendix"
+        if config.get('Tagebuch', 'append_title'):
+            append_title = "# " + config.get('Tagebuch', 'append_title')
+        f.write("\n" + append_title + "\n\n")
+        p = subprocess.Popen( config.get('Tagebuch', 'append_command'), stdout=subprocess.PIPE, shell=True )
+        (output, err) = p.communicate()
+        p_status = p.wait()
+        f.write( output.decode('iso-8859-15') )
 
-    f.write( output.decode('iso-8859-15') )
     f.close()
     print("Neue Datei: %s" % (currentFile, ))
 
-# print "Starte Editor fuer Datei", currentFile
+# Start the editor:
 subprocess.call( [editor, currentFile] )
 print(currentFile)
 
