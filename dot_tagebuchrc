@@ -1,0 +1,5 @@
+[Tagebuch]
+basedir: ~/Tagebuch
+editor: vim
+append_title: Redmine-Tickets
+append_command: /home/myuser/me/tools/redmine/my-tickets.pl --prefix '* ( ) '
